@@ -99,6 +99,7 @@ class Post extends Component {
     };
     return (
       <div className="column">
+        {metadata.currentPost&&
         <article className="PostFull hentry">
           <span>
             <div className="float-right" />
@@ -255,7 +256,8 @@ class Post extends Component {
           </div>
           <NewComment post={metadata.currentPost} />
           {metadata.currentPost && <CommentList post={metadata.currentPost} />}
-        </article>
+        </article>}
+        {!metadata.currentPost&&<h2>404 Not Found</h2> }
         {this.state.fireRedirect && <Redirect to={"/view/Trending/All"} />}
       </div>
     );

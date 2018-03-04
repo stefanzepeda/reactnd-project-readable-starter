@@ -12,11 +12,7 @@ To get started developing right away:
     - `cd api-server`
     - `npm install`
     - `node server`
-* In another terminal window, use Create React App to scaffold out the front-end
-    - `create-react-app frontend`
-    - `cd frontend`
-    - `npm start`
-
-## API Server
-
-Information about the API server and how to use it can be found in its [README file](api-server/README.md).
+* Start the front end
+    - `cd readable-app`
+    - `npm install`
+    - `yarn start`

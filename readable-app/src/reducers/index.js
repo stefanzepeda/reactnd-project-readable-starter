@@ -69,7 +69,7 @@ function metadata(state = initialState, action) {
     case FETCH_POST:
       return {
         ...state,
-        currentPost: post
+        currentPost: Object.keys(post).length === 0 && post.constructor === Object?null:post,
       };
     case NEW_POST:
       return {

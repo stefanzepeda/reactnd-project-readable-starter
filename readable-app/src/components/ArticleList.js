@@ -5,7 +5,7 @@ import Article from "./Article";
 import { Dropdown } from "semantic-ui-react";
 
 class ArticleList extends Component {
-  
+
   constructor() {
     super();
     this.state = {
