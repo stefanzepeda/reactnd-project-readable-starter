@@ -16,6 +16,22 @@ const defaultData = {
       {
         name: 'udacity',
         path: 'udacity'
+      },
+      {
+        name: 'health',
+        path: 'health'
+      },
+      {
+        name: 'news',
+        path: 'news'
+      },
+      {
+        name: 'music',
+        path: 'music'
+      },
+      {
+        name: 'books',
+        path: 'books'
       }
   ]
 }
