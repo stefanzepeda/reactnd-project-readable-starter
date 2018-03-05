@@ -1,12 +1,14 @@
-# Readable API Server
+# Grumpy Reads
 
-This is the starter project for the final assessment project for Udacity's Redux course where you will build a content and comment web app. Users will be able to post content to predefined categories, comment on their posts and other users' posts, and vote on posts and comments. Users will also be able to edit and delete posts and comments.
+This is my version of the Readable Project for Udacity. There are two components in this module, an API Server and a Front End React Redux App.
 
-This repository includes the code for the backend API Server that you'll use to develop and interact with the front-end portion of the project.
+The React-Redux app is inspired in the Steemit project website, as it mirrors its skin. Additionally, fundamentals from Semantic UI for React where used across the project.
 
-## Start Developing
+Use the top level filters to navigate through the application and buttons to vote and delete. 
 
-To get started developing right away:
+The app is Grumpy Cat inspired.
+
+## Start the project
 
 * Install and start the API server
     - `cd api-server`
