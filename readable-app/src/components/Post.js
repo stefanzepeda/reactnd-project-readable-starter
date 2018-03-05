@@ -30,7 +30,8 @@ class Post extends Component {
       editMode: false,
       body: "",
       fireRedirect: false,
-      modalOpen: false
+      modalOpen: false,
+      initialEdit: false,
     };
   }
 
@@ -40,22 +41,38 @@ class Post extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.metadata.currentPost) {
+      this.setState(prevState => {
+        return {
+          ...prevState,
+          editMode: (this.props.edit&&!this.state.initialEdit),
+          modalOpen: this.state.modalOpen||this.props.delete,
+          body: this.props.metadata.currentPost.body
+        };
+      });
+    }
+
+  }
+
   handleChange = (e, data) => {
     this.setState({ [data.name]: data.value });
   };
 
   handleSubmit = () => {
-    this.props.editPost(this.props.metadata.currentPost.id, {
-      timestamp: Date.now(),
-      body: this.state.body
-    });
-
     this.setState(prevState => {
       return {
         ...prevState,
-        editMode: !prevState.editMode
+        editMode: !prevState.editMode,
+        initialEdit: this.props.edit,
       };
     });
+    this.props.editPost(this.props.metadata.currentPost.id, {
+      timestamp: Date.now(),
+      body: this.state.body,
+    },
+    this.props.edit,);
+
   };
 
   handleEdit = () => {
@@ -63,7 +80,7 @@ class Post extends Component {
       return {
         ...prevState,
         editMode: !prevState.editMode,
-        body: this.props.metadata.currentPost.body
+        body: this.props.metadata.currentPost.body,
       };
     });
   };
@@ -83,7 +100,7 @@ class Post extends Component {
     this.props.votePost(id, { option: `${direction}Vote` }, direction);
   };
 
-  handleClose = () => this.setState({ modalOpen: false });
+  handleClose = () => this.setState({ modalOpen: false , fireRedirect: this.props.delete||this.state.fireRedirect});
   handleOpen = () => this.setState({ modalOpen: true });
 
   render() {
@@ -92,7 +109,7 @@ class Post extends Component {
       width: "1.12rem",
       height: "1.12rem"
     };
-    const { metadata, id } = this.props;
+    const { metadata, id} = this.props;
     let userStyle = {
       backgroundImage:
         "url(https://e3.365dm.com/18/01/1096x616/skynews-grumpy-cat-feline_4214392.jpg?20180125123105)"
@@ -192,6 +209,11 @@ class Post extends Component {
                 </span>
                 <span className="Voting">
                   <span className="Voting__inner">
+                    <span>
+                      &nbsp;&nbsp;
+                      <i className="comment icon" />
+                      <span> {metadata.currentPost.commentCount}</span>
+                    </span>
                     <button
                       onClick={event => {
                         this.handleVote(metadata.currentPost.id, "up");
@@ -259,6 +281,9 @@ class Post extends Component {
         </article>}
         {!metadata.currentPost&&<h2>404 Not Found</h2> }
         {this.state.fireRedirect && <Redirect to={"/view/Trending/All"} />}
+        {metadata.currentPost&&metadata.editRedirect && <Redirect to={`/post/${metadata.currentPost.category}/${metadata.currentPost.id}`} />}
+
+
       </div>
     );
   }
@@ -266,12 +291,14 @@ class Post extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   metadata: state.metadata,
-  id: ownProps.id
+  id: ownProps.id,
+  edit: ownProps.edit,
+  delete: ownProps.delete,
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchPost: id => dispatch(fetchPost(id)),
-  editPost: (id, body) => dispatch(editPost(id, body)),
+  editPost: (id, body, editRedirect) => dispatch(editPost(id, body, editRedirect)),
   deletePost: (id) => dispatch(deletePost(id)),
   votePost: (id, body, direction) =>
     dispatch(votePostCurrent(id, body, direction))

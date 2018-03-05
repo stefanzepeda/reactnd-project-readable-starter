@@ -2,11 +2,8 @@ import React, { Component } from "react";
 import "./App.css";
 import { Link } from "react-router-dom";
 
-function NavLink (props) {
-  const { sort, category, name } = props;
-  return(
+const NavLink = ({ sort, category, name }) =>
+(
     <Link to={`/view/${sort}/${category}`}>{name}</Link>
-  )
-}
-
+)
 export default NavLink;

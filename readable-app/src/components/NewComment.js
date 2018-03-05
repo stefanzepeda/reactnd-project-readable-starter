@@ -2,14 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Button, Form } from "semantic-ui-react";
 import { createComment } from "../actions";
-
-function randomString(length) {
-  var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  var result = "";
-  for (var i = length; i > 0; --i)
-    result += chars[Math.floor(Math.random() * chars.length)];
-  return result;
-}
+import * as Helper from "../util/Helper";
 
 class NewComment extends Component {
   constructor() {
@@ -23,7 +16,7 @@ class NewComment extends Component {
   handleSubmit = () => {
     this.props.newComment({
       ...this.state,
-      id: randomString(23),
+      id: Helper.randomString(23),
       timestamp: Date.now(),
       parentId: this.props.post.id
     });

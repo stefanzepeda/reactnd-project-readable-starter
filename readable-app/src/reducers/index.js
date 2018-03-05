@@ -1,5 +1,4 @@
 import {
-  FETCH_CATEGORIES,
   FETCH_POSTS,
   FETCH_POST,
   NEW_POST,
@@ -11,27 +10,21 @@ import {
   EDIT_POST,
   VOTE_POST_CURRENT,
   DELETE_POST,
-  DELETE_COMMENT,
+  DELETE_COMMENT
 } from "../actions";
 
 import { combineReducers } from "redux";
+import * as Helper from "../util/Helper";
+
+import {posts} from "./postsReducer"
+import {categories} from "./categoriesReducer"
 
 const initialState = {
   category: "All",
-  sort: "trending"
+  sort: "trending",
+  editRedirect: false
 };
 
-function compare(a, b) {
-  let nameA = a.name.toUpperCase();
-  let nameB = b.name.toUpperCase();
-  if (nameA < nameB) {
-    return -1;
-  }
-  if (nameA > nameB) {
-    return 1;
-  }
-  return 0;
-}
 
 function metadata(state = initialState, action) {
   const {
@@ -44,32 +37,24 @@ function metadata(state = initialState, action) {
     comments,
     comment,
     commentid,
+    editRedirect
   } = action;
 
   switch (action.type) {
-    case FETCH_CATEGORIES:
-      //Add the All category
-      let newCategories = [
-        {
-          name: "All",
-          path: "All"
-        }
-      ].concat(categories.sort(compare));
-      return {
-        ...state,
-        categories: newCategories
-      };
     case FETCH_POSTS:
       return {
         ...state,
-        posts: posts,
         category: category,
+        editRedirect: false,
         currentPost: null
       };
     case FETCH_POST:
       return {
         ...state,
-        currentPost: Object.keys(post).length === 0 && post.constructor === Object?null:post,
+        currentPost:
+          Object.keys(post).length === 0 && post.constructor === Object
+            ? null
+            : post
       };
     case NEW_POST:
       return {
@@ -77,20 +62,7 @@ function metadata(state = initialState, action) {
         currentPost: post
       };
 
-    case VOTE_POST:
-      let newPosts = state.posts.map((postTemp, ci) => {
-        if (postTemp.id === post.id) {
-          postTemp.voteScore =
-            direction === "up"
-              ? postTemp.voteScore + 1
-              : postTemp.voteScore - 1;
-        }
-        return postTemp;
-      });
-      return {
-        ...state,
-        posts: newPosts
-      };
+
 
     case VOTE_POST_CURRENT:
       return {
@@ -138,6 +110,7 @@ function metadata(state = initialState, action) {
     case EDIT_POST:
       return {
         ...state,
+        editRedirect: editRedirect,
         currentPost: {
           ...state.currentPost,
           body: post.body,
@@ -147,19 +120,19 @@ function metadata(state = initialState, action) {
 
     case DELETE_POST:
       return {
-          ...state,
-          currentPost: null,
-     };
+        ...state,
+        currentPost: null
+      };
 
-     case DELETE_COMMENT:
-       return {
-           ...state,
-           currentPost: {
-             ...state.currentPost,
-             comments: state.currentPost.comments.filter((commentTemp, ci) => {
-               return commentTemp.id!=commentid;
-             })
-           }
+    case DELETE_COMMENT:
+      return {
+        ...state,
+        currentPost: {
+          ...state.currentPost,
+          comments: state.currentPost.comments.filter((commentTemp, ci) => {
+            return commentTemp.id != commentid;
+          })
+        }
       };
 
     case FETCH_COMMENTS:
@@ -175,6 +148,7 @@ function metadata(state = initialState, action) {
         ...state,
         currentPost: {
           ...state.currentPost,
+          commentCount: state.currentPost.commentCount + 1,
           comments: [...state.currentPost.comments, action.comment]
         }
       };
@@ -185,5 +159,7 @@ function metadata(state = initialState, action) {
 }
 
 export default combineReducers({
-  metadata
+  metadata,
+  categories,
+  posts,
 });

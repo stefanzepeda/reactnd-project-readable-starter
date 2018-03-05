@@ -81,9 +81,10 @@ export const editedComment = comment => ({
   comment
 });
 
-export const editedPost = post => ({
+export const editedPost = (post, editRedirect) => ({
   type: EDIT_POST,
-  post
+  post,
+  editRedirect,
 });
 
 export const deletedPost = id => ({
@@ -132,9 +133,9 @@ export const editComment = (id, body) => dispatch =>
     dispatch(editedComment(comment))
   );
 
-export const editPost = (id, body) => dispatch =>
+export const editPost = (id, body, editRedirect) => dispatch =>
   GrumpyAPIUtil.editPost(id, body)
-  .then(post => dispatch(editedPost(post)));
+  .then(post => dispatch(editedPost(post, editRedirect)));
 
 export const deletePost = (id) => dispatch =>
   GrumpyAPIUtil.deletePost(id)

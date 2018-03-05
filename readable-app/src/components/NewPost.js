@@ -10,14 +10,7 @@ import {
   Message
 } from "semantic-ui-react";
 import { Redirect } from "react-router-dom";
-
-function randomString(length) {
-  var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  var result = "";
-  for (var i = length; i > 0; --i)
-    result += chars[Math.floor(Math.random() * chars.length)];
-  return result;
-}
+import * as Helper from "../util/Helper";
 
 class NewPost extends Component {
   constructor() {
@@ -29,7 +22,7 @@ class NewPost extends Component {
   }
 
   componentWillMount() {
-    if (!this.props.categories) {
+    if (!this.props.categories||this.props.categories.length==0) {
       this.props.fetchCategories();
     }
   }
@@ -38,16 +31,14 @@ class NewPost extends Component {
     this.setState({ [data.name]: data.value });
   };
 
-  handleSubmit = () => {
+  handleSubmit = () =>{
+    const { author, title, body, category } = this.state;
     if (
-      this.state.author != null &&
-      this.state.title != null &&
-      this.state.body != null &&
-      this.state.category != null
+      author&&title &&body &&category
     ) {
       this.props.newPost({
         ...this.state,
-        id: randomString(23),
+        id: Helper.randomString(23),
         timestamp: Date.now()
       });
       this.setState({ fireRedirect: true, error: false });
@@ -119,8 +110,8 @@ class NewPost extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   categories:
-    state.metadata.categories &&
-    state.metadata.categories
+    state.categories &&
+    state.categories
       .filter(category => category.name != "All")
       .map(category => ({
         text: category.name,

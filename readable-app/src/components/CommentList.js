@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { fetchPostComments } from "../actions";
 import Comment from "./Comment";
 import { Dropdown } from "semantic-ui-react";
+import * as Helper from "../util/Helper";
 
 class CommentList extends Component {
 
@@ -14,7 +15,7 @@ class CommentList extends Component {
         { text: "votes", value: "votes" },
         { text: "age", value: "age" }
       ],
-      sortFunc: sortByDate
+      sortFunc: Helper.sortByDate
     };
   }
 
@@ -26,7 +27,7 @@ class CommentList extends Component {
     this.setState(prevState => {
       return {
         ...prevState,
-        sortFunc: data.value === "age" ? sortByDate : sortByScore
+        sortFunc: data.value === "age" ? Helper.sortByDate : Helper.sortByScore
       };
     });
   };
@@ -66,13 +67,5 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   fetchComments: post => dispatch(fetchPostComments(post))
 });
-
-function sortByDate(a, b) {
-  return b.timestamp - a.timestamp;
-}
-
-function sortByScore(a, b) {
-  return b.voteScore - a.voteScore;
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommentList);

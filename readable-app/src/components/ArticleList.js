@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { fetchPosts, fetchPostsCategory } from "../actions";
 import Article from "./Article";
 import { Dropdown } from "semantic-ui-react";
+import * as Helper from "../util/Helper";
+
 
 class ArticleList extends Component {
 
@@ -13,7 +15,7 @@ class ArticleList extends Component {
         { text: "votes", value: "votes" },
         { text: "age", value: "age" }
       ],
-      sortFunc: sortByDate,
+      sortFunc: Helper.sortByDate,
       sortDefault: "age"
     };
   }
@@ -27,7 +29,7 @@ class ArticleList extends Component {
     this.setState(prevState => {
       return {
         ...prevState,
-        sortFunc: this.props.sort === "New" ? sortByScore : sortByDate,
+        sortFunc: this.props.sort === "New" ? Helper.sortByScore : Helper.sortByDate,
         sortDefault: this.props.sort === "New" ? "votes" : "age"
       };
     });
@@ -45,14 +47,14 @@ class ArticleList extends Component {
     this.setState(prevState => {
       return {
         ...prevState,
-        sortFunc: data.value === "age" ? sortByDate : sortByScore,
+        sortFunc: data.value === "age" ? Helper.sortByDate : Helper.sortByScore,
         sortDefault: data.value
       };
     });
   };
 
   render() {
-    const { metadata } = this.props;
+    const { metadata,posts } = this.props;
 
     return (
       <article className="articles">
@@ -73,8 +75,8 @@ class ArticleList extends Component {
         <hr className="articles__hr" />
         <div className="PostsList">
           <ul className="PostsList__summaries">
-            {metadata.posts &&
-              metadata.posts
+            {posts &&
+              posts
                 .sort(this.state.sortFunc)
                 .map(post => <Article key={post.id} post={post} />)}
           </ul>
@@ -84,16 +86,9 @@ class ArticleList extends Component {
   }
 }
 
-function sortByDate(a, b) {
-  return b.timestamp - a.timestamp;
-}
-
-function sortByScore(a, b) {
-  return b.voteScore - a.voteScore;
-}
-
 const mapStateToProps = (state, ownProps) => ({
   metadata: state.metadata,
+  posts: state.posts,
   category: ownProps.category
 });
 

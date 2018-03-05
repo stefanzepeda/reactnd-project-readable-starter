@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import NavLink from "./NavLink";
 import { Route, Switch } from "react-router-dom";
 
-function NavBar (props) {
-  return(
+const NavBar  = () => 
+(
     <ul className="HorizontalMenu menu show-for-medium Header__sort">
       <li>
         <Switch>
@@ -79,6 +79,6 @@ function NavBar (props) {
       </li>
     </ul>
   )
-}
+
 
 export default NavBar;
